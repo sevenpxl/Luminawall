@@ -122,6 +122,7 @@ npm run tauri:build
 
 ---
 
+
 ## Roadmap
 
 - [ ] Wayland support via `swww` / `swaybg`
