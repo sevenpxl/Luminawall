@@ -1,0 +1,31 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --accent-green : #00ff9d;
+  --accent-red   : #ff4757;
+  --accent-amber : #f5a623;
+  --bg-base      : #080808;
+  --bg-panel     : #0d0d0d;
+  --border-dim   : #1a1a1a;
+  --text-muted   : #555;
+  --text-main    : #ccc;
+  --font-mono    : 'IBM Plex Mono', monospace;
+}
+
+html, body, #__next { height: 100%; }
+
+body {
+  background : var(--bg-base);
+  color      : var(--text-main);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* custom scrollbar */
+::-webkit-scrollbar             { width: 4px; }
+::-webkit-scrollbar-track       { background: #0d0d0d; }
+::-webkit-scrollbar-thumb       { background: #2a2a2a; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+
+button { font-family: inherit; }

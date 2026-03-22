@@ -9,7 +9,7 @@
 ├──────────────────────────────────────────────────────────┤
 │  VIDEO SOURCE                                            │
 │  ┌────────────────────────────────────────────────────┐  │
-│  │      ⬇  Drop a video here, or click to browse      │  │
+│  │      ⬇  Drop a video here, or click to browse     │  │
 │  └────────────────────────────────────────────────────┘  │
 │                                                          │
 │  PLAYBACK SETTINGS                                       │
@@ -121,7 +121,6 @@ npm run tauri:build
 | `set_autostart` | `enabled, videoPath, muted` | `Ok(String) \| Err(String)` |
 
 ---
-
 
 ## Roadmap
 

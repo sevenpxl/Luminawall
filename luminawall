@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────
+#  LuminaWall — single-command launcher
+# ─────────────────────────────────────────────────────────────
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; BOLD='\033[1m'; NC='\033[0m'
+info()  { echo -e "${GREEN}▶${NC}  $*"; }
+warn()  { echo -e "${YELLOW}⚠${NC}  $*"; }
+error() { echo -e "${RED}✖${NC}  $*" >&2; }
+
+chmod +x "$SCRIPT_DIR/luminawall" "$SCRIPT_DIR/scripts/"*.sh 2>/dev/null || true
+[[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+
+BUILD_FIRST=false; DEV_MODE=false
+for arg in "$@"; do
+  case "$arg" in
+    --build) BUILD_FIRST=true ;;
+    --dev)   DEV_MODE=true ;;
+    --help|-h) echo "Usage: ./luminawall [--build|--dev|--help]"; exit 0 ;;
+  esac
+done
+
+echo -e "\n${BOLD}  🎬  LuminaWall${NC}\n"
+
+if [[ -n "${WAYLAND_DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
+  SESSION="wayland"; info "Wayland session — using swww backend"
+elif [[ -n "${DISPLAY:-}" ]] || [[ "${XDG_SESSION_TYPE:-}" == "x11" ]]; then
+  SESSION="x11"; info "X11 session — using xwinwrap backend"
+else
+  SESSION="unknown"
+fi
+
+[[ "$DEV_MODE" == "true" ]] && { npm run tauri:dev; exit 0; }
+
+RELEASE_BIN=""
+[[ -f "src-tauri/target/release/luminawall" ]] && RELEASE_BIN="src-tauri/target/release/luminawall"
+APPIMAGE=$(find src-tauri/target/release/bundle/appimage -name "*.AppImage" -maxdepth 1 2>/dev/null | head -1 || true)
+[[ -n "$APPIMAGE" ]] && RELEASE_BIN="$APPIMAGE"
+
+if [[ -z "$RELEASE_BIN" ]] || [[ "$BUILD_FIRST" == "true" ]]; then
+  if ! command -v cargo &>/dev/null; then
+    error "cargo not found. Run: ./scripts/install-deps.sh"; exit 1
+  fi
+
+  # Install Tauri system deps + create pkg-config symlinks
+  if command -v apt-get &>/dev/null; then
+    info "Running install-tauri-deps.sh…"
+    bash "$SCRIPT_DIR/scripts/install-tauri-deps.sh"
+  fi
+
+  info "Building LuminaWall (~2 min)…"
+  npm install --silent
+  npm run tauri:build
+  RELEASE_BIN="src-tauri/target/release/luminawall"
+  info "Build complete!"
+fi
+
+info "Launching…"
+exec "$RELEASE_BIN"
