@@ -11,10 +11,10 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^2",
-    "next": "^14.2.30",
+    "@tauri-apps/plugin-dialog": "^2",
+    "next": "^15.5.18",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "@tauri-apps/plugin-dialog": "^2"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2",

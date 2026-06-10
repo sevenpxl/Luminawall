@@ -23,7 +23,12 @@
         "./src/*"
       ]
     },
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
